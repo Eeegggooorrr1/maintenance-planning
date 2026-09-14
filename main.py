@@ -6,7 +6,8 @@ def schedule_next_service(
         interval_days: int
 ) -> date:
     if interval_days <= 0:
-        raise ValueError("Интервал обслуживания должен быть положительным")
+        raise ValueError("Интервал обслуживания должен быть "
+                         "положительным")
     return last_service_date + timedelta(days=interval_days)
 
 
