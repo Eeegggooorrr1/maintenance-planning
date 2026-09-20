@@ -1,0 +1,73 @@
+[project]
+name = "maintenance-planning"
+version = "0.1.0"
+description = "Система планирования обслуживания бытовой техники"
+authors = [
+    {name = "Аникеев Егор",email = "anikeev.e.a@edu.mirea.ru"}
+]
+packages = [{ include = "maintenance_planning", from = "src" }]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.black]
+line-length = 79
+target-version = ["py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 79
+src_paths = ["src", "tests"]
+known_first_party = ["maintenance_planning"]
+
+[tool.flake8]
+max-line-length = 79
+extend-ignore = ["E203", "W503"]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    ".mypy_cache",
+    ".pytest_cache",
+]
+max-complexity = 10
+per-file-ignores = [
+    "__init__.py:F401",
+    "tests/*:S101",
+]
+
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.1.1,<10.0.0)",
+    "flake8 (>=7.3.0,<8.0.0)",
+    "flake8-pyproject (>=1.2.4,<2.0.0)",
+    "black (>=26.5.1,<27.0.0)",
+    "isort (>=9.0.1,<10.0.0)",
+    "flake8-bugbear (>=26.9.9,<27.0.0)",
+    "flake8-comprehensions (>=3.17.0,<4.0.0)",
+    "flake8-simplify (>=0.30.0,<0.31.0)",
+    "pre-commit (>=4.6.2,<5.0.0)"
+]
