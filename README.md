@@ -27,76 +27,54 @@
 * обработка ошибок при работе с данными;
 * автоматизированное тестирование функций.
 
-## Структура проекта
+## Объектная модель
 
-* `src/maintenance_planning/main.py` – точка запуска программы;
-* `src/maintenance_planning/service.py` – предметная логика;
-* `src/maintenance_planning/repository.py` – работа с JSON-файлами;
-* `src/maintenance_planning/data/tasks.json` – данные проекта;
-* `tests/test_service.py` – автоматизированные тесты;
-* `pyproject.toml` – настройки проекта и зависимости;
-* `.pre-commit-config.yaml` – настройки проверок перед комитом;
-* `Makefile` – основные команды проекта;
-* `README.md` – описание проекта.
+* `User` хранит имя, email и роль пользователя.
+* `Device` хранит владельца, категорию, бренд, модель, дату последнего обслуживания и интервал. Метод `mark_serviced()` обновляет обслуживание, свойство `next_service_date` рассчитывает следующий срок.
+* `Task` хранит задачу для устройства, дату, приоритет и статус. Методы `start()`, `complete()` и `cancel()` защищают переходы состояния.
+* `DeviceService` и `TaskService` содержат бизнес-сценарии и проверяют принадлежность данных пользователю.
+* `UserRepository`, `DeviceRepository` и `TaskRepository` предоставляют операции `find_by_id`, `find_by_owner`, `create`, `update`, `delete`.
 
-## Формат хранения данных
+## Структура
 
-Данные хранятся в JSON-файле `src/maintenance_planning/data/tasks.json`.
+```text
+src/maintenance_planning/
+├── config.py           # Настройки
+├── model/              # модели предметной области
+│   ├── user.py
+│   ├── device.py
+│   └── task.py
+├── repo/               # репозитории
+│   ├── user.py
+│   ├── device.py
+│   ├── task.py
+│   └── storage.py
+├── service/            # сервисы
+│   ├── device.py
+│   └── task.py
+├── main.py             # консольный интерфейс
+└── data/
+    ├── users.json
+    ├── devices.json
+    └── tasks.json
+tests/
+├── conftest.py
+├── test_domain.py
+├── test_auth_service.py
+├── test_device_service.py
+└── test_task_service.py
+```
 
-Для каждой задачи сохраняются название устройства, дата обслуживания и признак выполнения задачи. Дата хранится в ISO-формате `YYYY-MM-DD`.
 
-## Требования
-
-* Python 3.11 или выше;
-* Poetry;
-* pytest;
-* isort;
-* Black;
-* flake8;
-* pre-commit.
-
-## Установка
+## Запуск
 
 ```bash
 poetry install
-```
-
-## Запуск программы
-
-```bash
 poetry run python -m maintenance_planning.main
 ```
 
-## Запуск тестов
+## Тесты
 
 ```bash
-poetry run pytest
+poetry run pytest -v
 ```
-
-## Форматирование кода
-
-Для форматирования и сортировки импортов предусмотрена команда:
-
-```bash
-make format
-```
-
-Она запускает `isort` и `black` для каталогов `src` и `tests`.
-
-## Проверка кода
-
-Проверка с помощью `flake8`:
-
-```bash
-make lint
-```
-
-Полный запуск pre-commit-проверок:
-
-```bash
-make check
-```
-
-## План развития
-
-В следующих практических работах проект планируется расширить за счет более детальной структуры данных, классов предметной области, миграции на реляционную БД и Django-интерфейса.

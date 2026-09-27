@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "owner_id": 1,
+        "name": "Стиральная машина",
+        "category": "крупная бытовая техника",
+        "brand": "Bosch",
+        "model": "Serie 4",
+        "serial_number": "WM-001",
+        "last_service_date": "2026-03-20",
+        "service_interval_days": 180,
+        "notes": ""
+    },
+    {
+        "id": 2,
+        "owner_id": 1,
+        "name": "Холодильник",
+        "category": "крупная бытовая техника",
+        "brand": "Samsung",
+        "model": "RB33",
+        "serial_number": "RF-002",
+        "last_service_date": "2026-03-15",
+        "service_interval_days": 180,
+        "notes": ""
+    },
+    {
+        "id": 3,
+        "owner_id": 3,
+        "name": "1wdf",
+        "category": "wsdcs",
+        "brand": "sfdse",
+        "model": "sadada",
+        "serial_number": "",
+        "last_service_date": null,
+        "service_interval_days": 180,
+        "notes": ""
+    }
+]

@@ -1,22 +1,4 @@
 [
-    {
-        "device_name": "Стиральная машина",
-        "service_date": "2026-09-20",
-        "done": false
-    },
-    {
-        "device_name": "Холодильник",
-        "service_date": "2026-09-15",
-        "done": false
-    },
-    {
-        "device_name": "Пылесос",
-        "service_date": "2026-09-25",
-        "done": false
-    },
-    {
-        "device_name": "Микроволновка",
-        "service_date": "2026-09-10",
-        "done": true
-    }
+    {"id": 1, "owner_id": 1, "device_id": 1, "title": "Проверить фильтр стиральной машины", "scheduled_date": "2026-09-20", "description": "Очистить фильтр и проверить шланги", "priority": 1, "status": "planned", "completed_at": null},
+    {"id": 2, "owner_id": 1, "device_id": 2, "title": "Разморозить холодильник", "scheduled_date": "2026-09-15", "description": "Плановое обслуживание", "priority": 2, "status": "planned", "completed_at": null}
 ]

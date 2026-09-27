@@ -1,4 +1,4 @@
-.PHONY: format lint check
+.PHONY: format lint check run
 
 format:
 	poetry run isort src tests
@@ -9,3 +9,6 @@ lint:
 
 check:
 	poetry run pre-commit run --all-files
+
+run:
+	poetry run python -m maintenance_planning.main

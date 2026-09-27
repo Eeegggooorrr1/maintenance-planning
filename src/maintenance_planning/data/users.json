@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "Демонстрационный пользователь",
+        "email": "demo@example.com",
+        "role": "user"
+    },
+    {
+        "id": 2,
+        "name": "Администратор",
+        "email": "admin@example.com",
+        "role": "admin"
+    },
+    {
+        "id": 3,
+        "name": "dsfd",
+        "email": "sasd@gmail.com",
+        "role": "user"
+    }
+]
