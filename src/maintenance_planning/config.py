@@ -8,6 +8,7 @@ class Settings:
     data_dir: Path
     app_name: str = "Система планирования обслуживания бытовой техники"
     default_service_interval_days: int = 180
+    debug: bool = True
 
     @classmethod
     def from_env(cls, env_file: str | Path | None = None) -> "Settings":
@@ -38,4 +39,6 @@ class Settings:
                     cls.default_service_interval_days,
                 )
             ),
+            debug=values.get("MAINTENANCE_DEBUG", "true").lower()
+            == "true",
         )

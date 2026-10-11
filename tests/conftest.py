@@ -1,5 +1,7 @@
+import os
 from pathlib import Path
 
+import django
 import pytest
 
 from maintenance_planning.repo import (
@@ -12,6 +14,9 @@ from maintenance_planning.service import (
     DeviceService,
     TaskService,
 )
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "maintenance_web.settings")
+django.setup()
 
 
 @pytest.fixture
