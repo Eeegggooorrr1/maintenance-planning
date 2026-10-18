@@ -1,0 +1,18 @@
+<article class="card device-card h-100">
+    <div class="card-body d-flex flex-column">
+        <h2 class="h4 card-title">
+            {{ device.name|default:"Без названия" }}
+        </h2>
+        <p class="card-text text-secondary">{{ device.category }}</p>
+        <p class="card-text">
+            {{ device.brand|default:"Бренд не указан" }}
+            {{ device.model }}
+        </p>
+        <a
+            href="{% url 'devices:detail' device.id %}"
+            class="btn btn-primary mt-auto align-self-start"
+        >
+            Подробнее
+        </a>
+    </div>
+</article>

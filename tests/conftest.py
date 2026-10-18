@@ -3,6 +3,7 @@ from pathlib import Path
 
 import django
 import pytest
+from django.test.utils import setup_test_environment
 
 from maintenance_planning.repo import (
     DeviceRepository,
@@ -17,6 +18,7 @@ from maintenance_planning.service import (
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "maintenance_web.settings")
 django.setup()
+setup_test_environment()
 
 
 @pytest.fixture

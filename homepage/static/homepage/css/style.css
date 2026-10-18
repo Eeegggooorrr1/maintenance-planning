@@ -1,0 +1,59 @@
+:root {
+    --service-blue: #2457a6;
+    --service-blue-soft: #eef4ff;
+    --service-border: #dce3ec;
+}
+
+body {
+    min-height: 100vh;
+    background: #f7f9fc;
+    color: #1f2937;
+}
+
+.site-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--service-border);
+}
+
+.site-logo {
+    width: 52px;
+    height: 52px;
+}
+
+.hero-panel {
+    background: var(--service-blue-soft);
+    border: 1px solid #cfddf5;
+}
+
+.device-card,
+.task-card,
+.detail-card {
+    border-color: var(--service-border);
+    box-shadow: 0 0.25rem 0.75rem rgb(15 23 42 / 6%);
+}
+
+.device-card:hover,
+.task-card:hover {
+    border-color: #9bb7e4;
+}
+
+.task-status {
+    height: fit-content;
+    white-space: nowrap;
+}
+
+.task-status-planned {
+    background: #5b6b82;
+}
+
+.task-status-progress {
+    background: #b56a00;
+}
+
+.task-status-completed {
+    background: #277447;
+}
+
+.task-status-cancelled {
+    background: #a63d40;
+}

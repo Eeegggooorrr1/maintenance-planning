@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - ТехСервис{% endblock %}
+
+{% block content %}
+    <section class="hero-panel p-4 p-md-5 rounded-3">
+        <h1 class="display-5">Планирование обслуживания техники</h1>
+        <p class="lead mb-4">
+            Контроль бытовых устройств и плановых работ в браузере.
+        </p>
+        <a href="{% url 'devices:list' %}" class="btn btn-primary me-2">
+            Устройства
+        </a>
+        <a
+            href="{% url 'maintenance_tasks:list' %}"
+            class="btn btn-outline-primary"
+        >
+            Задачи обслуживания
+        </a>
+    </section>
+{% endblock %}

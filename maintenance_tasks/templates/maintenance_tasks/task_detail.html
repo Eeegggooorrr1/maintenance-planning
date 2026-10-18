@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if task %}
+        {{ task.title }} - ТехСервис
+    {% else %}
+        Задача не найдена - ТехСервис
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if task %}
+        <div class="card detail-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between gap-3">
+                    <h1 class="card-title">{{ task.title }}</h1>
+                    {% include "maintenance_tasks/includes/task_status.html" %}
+                </div>
+                <p><strong>ID:</strong> {{ task.id }}</p>
+                <p>
+                    <strong>Устройство:</strong>
+                    {% if device %}
+                        <a href="{% url 'devices:detail' device.id %}">
+                            {{ device.name }}
+                        </a>
+                    {% else %}
+                        устройство не найдено
+                    {% endif %}
+                </p>
+                <p>
+                    <strong>Дата:</strong>
+                    {{ task.scheduled_date|date:"d.m.Y" }}
+                </p>
+                <p><strong>Приоритет:</strong> {{ task.priority }}</p>
+                <p>
+                    <strong>Описание:</strong>
+                    {{ task.description|default:"не указано" }}
+                </p>
+            </div>
+        </div>
+    {% else %}
+        <h1 class="text-danger">Задача не найдена</h1>
+        <p>Задача с указанным идентификатором отсутствует.</p>
+    {% endif %}
+
+    <a
+        href="{% url 'maintenance_tasks:list' %}"
+        class="btn btn-outline-secondary mt-3"
+    >
+        К списку задач
+    </a>
+{% endblock %}

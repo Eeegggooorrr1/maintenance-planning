@@ -38,7 +38,13 @@ extend-exclude = '''
 profile = "black"
 line_length = 79
 src_paths = ["src", "tests"]
-known_first_party = ["maintenance_planning"]
+known_first_party = [
+    "devices",
+    "homepage",
+    "maintenance_planning",
+    "maintenance_tasks",
+    "maintenance_web",
+]
 
 [tool.flake8]
 max-line-length = 79

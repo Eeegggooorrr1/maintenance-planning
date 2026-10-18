@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Задачи обслуживания - ТехСервис{% endblock %}
+
+{% block content %}
+    <h1>Задачи обслуживания</h1>
+    <p class="text-secondary">Всего задач: {{ tasks|length }}</p>
+
+    <div class="row g-3">
+        {% for task in tasks %}
+            <div class="col-12 col-lg-6">
+                {% include "maintenance_tasks/includes/task_card.html" %}
+            </div>
+        {% empty %}
+            <p>Задачи обслуживания не найдены.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

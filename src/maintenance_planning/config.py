@@ -39,6 +39,5 @@ class Settings:
                     cls.default_service_interval_days,
                 )
             ),
-            debug=values.get("MAINTENANCE_DEBUG", "true").lower()
-            == "true",
+            debug=values.get("MAINTENANCE_DEBUG", "true").lower() == "true",
         )

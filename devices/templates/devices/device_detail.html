@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if device %}
+        {{ device.name }} - ТехСервис
+    {% else %}
+        Устройство не найдено - ТехСервис
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if device %}
+        <div class="card detail-card">
+            <div class="card-body">
+                <h1 class="card-title">{{ device.name }}</h1>
+                <p><strong>ID:</strong> {{ device.id }}</p>
+                <p><strong>Категория:</strong> {{ device.category }}</p>
+                <p>
+                    <strong>Бренд:</strong>
+                    {{ device.brand|default:"не указан" }}
+                </p>
+                <p>
+                    <strong>Модель:</strong>
+                    {{ device.model|default:"не указана" }}
+                </p>
+                <p>
+                    <strong>Следующее обслуживание:</strong>
+                    {% if device.next_service_date %}
+                        {{ device.next_service_date|date:"d.m.Y" }}
+                    {% else %}
+                        не запланировано
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    {% else %}
+        <h1 class="text-danger">Устройство не найдено</h1>
+        <p>Устройство с указанным идентификатором отсутствует.</p>
+    {% endif %}
+
+    <a
+        href="{% url 'devices:list' %}"
+        class="btn btn-outline-secondary mt-3"
+    >
+        К списку устройств
+    </a>
+{% endblock %}

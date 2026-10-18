@@ -77,7 +77,7 @@ def main() -> None:
                 print(f"Добавлено: {task}")
             elif choice == "5":
                 _print_tasks(task_service, user)
-                task_id = int(input('ID задачи: '))
+                task_id = int(input("ID задачи: "))
                 completed = task_service.complete(task_id, user.id)
                 print(f"Завершено: {completed}")
             elif choice == "0":
