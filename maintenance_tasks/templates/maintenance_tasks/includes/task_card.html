@@ -7,8 +7,9 @@
             {% include "maintenance_tasks/includes/task_status.html" %}
         </div>
         <p class="card-text">
-            Плановая дата: {{ task.scheduled_date|date:"d.m.Y" }}
+            Плановая дата: {{ task.scheduled_date }}
         </p>
+        <p class="card-text">Устройство: {{ task.device_name }}</p>
         <p class="card-text text-secondary">
             Приоритет: {{ task.priority }}
         </p>

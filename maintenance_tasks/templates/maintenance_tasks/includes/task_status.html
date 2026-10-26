@@ -1,8 +1,8 @@
-{% if task.status.value == "completed" %}
+{% if task.status == "completed" %}
     <span class="badge task-status task-status-completed">Выполнено</span>
-{% elif task.status.value == "cancelled" %}
+{% elif task.status == "cancelled" %}
     <span class="badge task-status task-status-cancelled">Отменено</span>
-{% elif task.status.value == "in_progress" %}
+{% elif task.status == "in_progress" %}
     <span class="badge task-status task-status-progress">В работе</span>
 {% else %}
     <span class="badge task-status task-status-planned">Запланировано</span>

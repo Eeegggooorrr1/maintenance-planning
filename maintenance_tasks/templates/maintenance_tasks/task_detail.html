@@ -19,17 +19,14 @@
                 <p><strong>ID:</strong> {{ task.id }}</p>
                 <p>
                     <strong>Устройство:</strong>
-                    {% if device %}
-                        <a href="{% url 'devices:detail' device.id %}">
-                            {{ device.name }}
-                        </a>
-                    {% else %}
-                        устройство не найдено
-                    {% endif %}
+                    <a href="{% url 'devices:detail' task.device_id %}">
+                        {{ task.device_name }}
+                    </a>
                 </p>
+                <p><strong>Владелец:</strong> {{ task.owner_name }}</p>
                 <p>
                     <strong>Дата:</strong>
-                    {{ task.scheduled_date|date:"d.m.Y" }}
+                    {{ task.scheduled_date }}
                 </p>
                 <p><strong>Приоритет:</strong> {{ task.priority }}</p>
                 <p>

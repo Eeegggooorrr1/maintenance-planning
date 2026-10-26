@@ -16,6 +16,8 @@ class RoutingTests(SimpleTestCase):
         assert reverse("devices:list") == "/devices/"
         assert reverse("devices:detail", args=[1]) == "/devices/1/"
         assert reverse("maintenance_tasks:list") == "/tasks/"
+        assert reverse("maintenance_tasks:due") == "/tasks/due/"
+        assert reverse("maintenance_tasks:statistics") == "/tasks/statistics/"
         assert reverse("maintenance_tasks:detail", args=[1]) == "/tasks/1/"
 
     def test_routes_resolve_to_expected_views(self) -> None:
@@ -24,6 +26,10 @@ class RoutingTests(SimpleTestCase):
         assert resolve("/devices/1/").func is device_detail
         assert resolve("/tasks/").func is tasks
         assert resolve("/tasks/1/").func is task_detail
+
+    def test_sql_scenario_routes_resolve(self) -> None:
+        assert resolve("/tasks/due/").url_name == "due"
+        assert resolve("/tasks/statistics/").url_name == "statistics"
 
 
 class PageTests(SimpleTestCase):
@@ -73,19 +79,22 @@ class PageTests(SimpleTestCase):
             "maintenance_tasks/task_detail.html",
         )
 
+    def test_due_search_and_statistics_pages_use_sql_data(self) -> None:
+        due_response = self.client.get("/tasks/due/?until=2026-10-01")
+        statistics_response = self.client.get("/tasks/statistics/")
+
+        assert due_response.status_code == 200
+        assert "Проверить фильтр" in due_response.content.decode()
+        assert statistics_response.status_code == 200
+        assert "Стиральная машина" in statistics_response.content.decode()
+
     def test_empty_collections_are_handled_by_templates(self) -> None:
         repository = Mock()
         repository.list_all.return_value = []
 
-        with patch(
-            "devices.views.get_device_repository",
-            return_value=repository,
-        ):
+        with patch("devices.views.list_devices", return_value=[]):
             device_response = self.client.get("/devices/")
-        with patch(
-            "maintenance_tasks.views.get_task_repository",
-            return_value=repository,
-        ):
+        with patch("maintenance_tasks.views.list_tasks", return_value=[]):
             task_response = self.client.get("/tasks/")
 
         assert "Устройства не найдены" in device_response.content.decode()

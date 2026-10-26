@@ -5,6 +5,7 @@ from maintenance_planning.config import Settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 APP_SETTINGS = Settings.from_env(BASE_DIR / ".env")
+MAINTENANCE_DB_PATH = BASE_DIR / "data" / "maintenance.sqlite"
 
 SECRET_KEY = os.getenv(
     "MAINTENANCE_SECRET_KEY",

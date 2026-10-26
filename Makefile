@@ -1,4 +1,4 @@
-.PHONY: format lint check test run run-web django-check static-check web-check
+.PHONY: format lint check test run run-web django-check static-check db-import sql-check web-check
 
 format:
 	poetry run isort src tests homepage devices maintenance_tasks maintenance_web manage.py
@@ -27,4 +27,10 @@ static-check:
 	poetry run python manage.py findstatic homepage/js/main.js
 	poetry run python manage.py findstatic homepage/img/logo.svg
 
-web-check: django-check static-check test lint
+db-import:
+	poetry run python -m db.import_json
+
+sql-check:
+	poetry run python -c "import sqlite3; c=sqlite3.connect('data/maintenance.sqlite'); c.executescript(open('sql/schema.sql', encoding='utf-8').read()); print(c.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").fetchall()); c.close()"
+
+web-check: django-check static-check db-import test lint
