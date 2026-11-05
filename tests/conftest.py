@@ -38,3 +38,12 @@ def services(repositories: dict[str, object]) -> dict[str, object]:
         "devices": DeviceService(devices),
         "tasks": TaskService(tasks, devices),
     }
+
+
+@pytest.fixture(scope="session", autouse=True)
+def django_test_database():
+    from django.test.utils import setup_databases, teardown_databases
+
+    config = setup_databases(verbosity=0, interactive=False)
+    yield
+    teardown_databases(config, verbosity=0)

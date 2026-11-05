@@ -1,4 +1,5 @@
 import json
+from contextlib import closing
 from pathlib import Path
 
 from django.conf import settings
@@ -16,7 +17,7 @@ def import_data(
     schema = (settings.BASE_DIR / "sql" / "schema.sql").read_text(
         encoding="utf-8"
     )
-    with get_connection(target) as connection:
+    with closing(get_connection(target)) as connection, connection:
         connection.executescript(schema)
         for table in ("users", "devices", "tasks"):
             rows = json.loads(

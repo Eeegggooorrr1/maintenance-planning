@@ -1,7 +1,5 @@
-from unittest.mock import Mock, patch
-
 from django.contrib.staticfiles import finders
-from django.test import Client, SimpleTestCase, override_settings
+from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.urls import resolve, reverse
 
 import homepage.views as homepage_views
@@ -32,9 +30,33 @@ class RoutingTests(SimpleTestCase):
         assert resolve("/tasks/statistics/").url_name == "statistics"
 
 
-class PageTests(SimpleTestCase):
+class PageTests(TestCase):
     def setUp(self) -> None:
         self.client = Client()
+        from devices.models import Device
+        from homepage.models import User
+        from maintenance_tasks.models import Task
+
+        owner = User.objects.create(name="Иван", email="ivan@example.com")
+        for pk, name in [
+            (1, "Стиральная машина"),
+            (2, "Холодильник"),
+            (3, "Чайник"),
+        ]:
+            Device.objects.create(
+                pk=pk, owner=owner, name=name, category="Техника"
+            )
+        for pk, title in [
+            (1, "Проверить фильтр"),
+            (2, "Разморозить холодильник"),
+        ]:
+            Task.objects.create(
+                pk=pk,
+                owner=owner,
+                device_id=pk,
+                title=title,
+                scheduled_date="2026-09-20",
+            )
 
     def test_main_pages_return_html(self) -> None:
         pages = {
@@ -53,7 +75,7 @@ class PageTests(SimpleTestCase):
     def test_views_no_longer_use_page_helper(self) -> None:
         assert not hasattr(homepage_views, "page")
 
-    def test_device_pages_use_json_data(self) -> None:
+    def test_device_pages_use_orm_data(self) -> None:
         list_response = self.client.get("/devices/")
         detail_response = self.client.get("/devices/1/")
 
@@ -66,7 +88,7 @@ class PageTests(SimpleTestCase):
             "devices/device_detail.html",
         )
 
-    def test_task_pages_use_json_data(self) -> None:
+    def test_task_pages_use_orm_data(self) -> None:
         list_response = self.client.get("/tasks/")
         detail_response = self.client.get("/tasks/1/")
 
@@ -79,7 +101,7 @@ class PageTests(SimpleTestCase):
             "maintenance_tasks/task_detail.html",
         )
 
-    def test_due_search_and_statistics_pages_use_sql_data(self) -> None:
+    def test_due_search_and_statistics_pages_use_orm_data(self) -> None:
         due_response = self.client.get("/tasks/due/?until=2026-10-01")
         statistics_response = self.client.get("/tasks/statistics/")
 
@@ -89,13 +111,13 @@ class PageTests(SimpleTestCase):
         assert "Стиральная машина" in statistics_response.content.decode()
 
     def test_empty_collections_are_handled_by_templates(self) -> None:
-        repository = Mock()
-        repository.list_all.return_value = []
+        from devices.models import Device
+        from maintenance_tasks.models import Task
 
-        with patch("devices.views.list_devices", return_value=[]):
-            device_response = self.client.get("/devices/")
-        with patch("maintenance_tasks.views.list_tasks", return_value=[]):
-            task_response = self.client.get("/tasks/")
+        Task.objects.all().delete()
+        Device.objects.all().delete()
+        device_response = self.client.get("/devices/")
+        task_response = self.client.get("/tasks/")
 
         assert "Устройства не найдены" in device_response.content.decode()
         assert "Задачи обслуживания не найдены" in (

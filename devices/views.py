@@ -1,6 +1,7 @@
-from db.queries import find_device, list_devices
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+
+from maintenance_web.queries import find_device, list_devices
 
 
 def devices(request: HttpRequest) -> HttpResponse:

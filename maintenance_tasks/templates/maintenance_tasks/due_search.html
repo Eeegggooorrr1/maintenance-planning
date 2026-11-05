@@ -16,7 +16,7 @@
         {% for task in tasks %}
             <p>
                 <a href="{% url 'maintenance_tasks:detail' task.id %}">{{ task.title }}</a>
-                - {{ task.device_name }} - {{ task.scheduled_date }}
+                - {{ task.device.name }} - {{ task.scheduled_date }}
             </p>
         {% empty %}
             <p>Подходящих задач нет.</p>

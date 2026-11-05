@@ -35,13 +35,43 @@
 
 ## Веб-интерфейс
 
-Страницы формируются шаблонами из каталогов `templates/`. Представления загружают данные из существующих JSON-репозиториев и передают объекты в шаблоны через контекст. Общий каркас находится в `templates/base.html`, а повторяющиеся карточки и статусы вынесены в подключаемые шаблоны.
+Страницы получают данные через Django ORM (`maintenance_web/queries.py`). Модели `homepage.User`, `devices.Device` и `maintenance_tasks.Task` связаны внешними ключами с `PROTECT`: нельзя удалить владельца или устройство, пока на них ссылаются записи. `User` предметной области не заменяет встроенного пользователя Django для входа в admin.
 
-Данные по-прежнему хранятся в JSON. Django ORM, формы и операции изменения данных через браузер на текущем этапе не используются.
+Список `/tasks/` поддерживает параметры `q` (название задачи или устройства), `until` (дата включительно), `device` (ID), `status` и `sort` (`date`, `-date`, `priority`, `device`). Условия объединяются, затем применяется стабильная сортировка с дополнительным `pk` и пагинация по 5 записей. Переходы сохраняют GET-параметры. Некорректные фильтры выводят сообщение и пустую выборку; неизвестная сортировка также отмечается ошибкой. Некорректный номер страницы обрабатывает `Paginator.get_page()`.
 
-## База данных
+## База данных и переход ПР9
 
-Добавлен отдельный слой SQLite без перехода на Django ORM. Схема находится в `sql/schema.sql`, примеры запросов в `sql/queries.sql`, подключение и импорт в `db/`. База создаётся из актуальных JSON-файлов командой `poetry run python -m db.import_json`. Веб-страницы получают строки SQLite через параметризованные SQL-запросы.
+Рабочая база веб-приложения: `db.sqlite3`, структура управляется миграциями. База ПР7 `data/maintenance.sqlite` сохранена как источник переноса. SQL-файлы и `db/` остаются материалами ПР7; веб-представления их не вызывают. Консольный интерфейс сохраняет отдельные JSON-репозитории и не синхронизируется с ORM автоматически.
+
+```bash
+poetry run python manage.py migrate
+poetry run python manage.py import_pr7
+poetry run python manage.py check
+poetry run python manage.py showmigrations
+poetry run python manage.py runserver
+```
+
+Если базы ПР7 ещё нет, сначала выполните `poetry run python -m db.import_json`. Произвольный источник: `manage.py import_pr7 --source path/to/maintenance.sqlite`. Импорт читает источник без права записи, сохраняет ID, проверяет поля и связи, выполняется одной транзакцией. Целевые предметные таблицы должны быть пустыми; повторный запуск завершается понятной ошибкой без изменения данных. Перед переносом существующей рабочей базы сохраните её резервную копию.
+
+Миграции: `homepage/0001_initial`, `devices/0001_initial`, `maintenance_tasks/0001_initial`. Проверка отсутствия неоформленных изменений: `manage.py makemigrations --check --dry-run`. Пример SQL миграции: `manage.py sqlmigrate maintenance_tasks 0001`.
+
+CRUD доступен через ORM в shell и зарегистрированные модели Django admin. Новые формы изменения данных в публичном интерфейсе в эту работу не входят.
+
+```python
+from homepage.models import User
+from devices.models import Device
+from maintenance_tasks.models import Task
+user = User.objects.create(name="Тест", email="test@example.com")
+device = Device.objects.create(owner=user, name="Чайник", category="Кухня")
+device.name = "Новый чайник"
+device.full_clean()
+device.save()
+Device.objects.get(pk=device.pk)
+device.delete()
+user.delete()
+```
+
+`full_clean()` проверяет владельца задачи, диапазон приоритета и значения полей. `save()` автоматически его не вызывает. Ограничения допустимых статусов, ролей, интервала и приоритета дополнительно созданы в БД. Для загрузки связанных объектов используется `select_related`, для статистики `Count`, `values` и `annotate`; устройства без задач сохраняются в статистике с нулём.
 
 ## Объектная модель
 

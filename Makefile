@@ -33,4 +33,15 @@ db-import:
 sql-check:
 	poetry run python -c "import sqlite3; c=sqlite3.connect('data/maintenance.sqlite'); c.executescript(open('sql/schema.sql', encoding='utf-8').read()); print(c.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").fetchall()); c.close()"
 
-web-check: django-check static-check db-import test lint
+web-check: django-check static-check test lint
+
+.PHONY: migrate orm-import migrations-check
+migrate:
+	poetry run python manage.py migrate
+
+orm-import:
+	poetry run python manage.py import_pr7
+
+migrations-check:
+	poetry run python manage.py makemigrations --check --dry-run
+	poetry run python manage.py showmigrations
