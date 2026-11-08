@@ -92,7 +92,7 @@ class ORMTests(TestCase):
         response = self.client.get("/tasks/", params)
         self.assertEqual(response.context["page_obj"].paginator.count, 8)
         self.assertEqual(
-            response.context["tasks"][0].scheduled_date, date(2026, 11, 8)
+            response.context["tasks"][0]["scheduled_date"], date(2026, 11, 8)
         )
         self.assertContains(response, "page=2")
         self.assertContains(response, "status=planned")

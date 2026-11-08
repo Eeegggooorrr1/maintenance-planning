@@ -7,12 +7,14 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from devices.models import Device
+from homepage.models import User
 from maintenance_tasks.models import Task
 from maintenance_web.queries import (
     due_tasks,
     find_task,
     list_tasks,
     statistics,
+    task_totals,
 )
 
 SORT_FIELDS = {
@@ -24,7 +26,7 @@ SORT_FIELDS = {
 PAGE_SIZE = 5
 
 
-def _filter_device(queryset, value: str, errors: list[str]):
+def _filter_id(queryset, field: str, value: str, errors: list[str]):
     if not value:
         return queryset
     if (
@@ -33,8 +35,8 @@ def _filter_device(queryset, value: str, errors: list[str]):
         and value.isdigit()
         and 0 < int(value) < 2**63
     ):
-        return queryset.filter(device_id=int(value))
-    errors.append("Укажите корректный ID устройства.")
+        return queryset.filter(**{field: int(value)})
+    errors.append("Укажите корректный ID устройства или владельца.")
     return queryset
 
 
@@ -43,7 +45,7 @@ def tasks(request: HttpRequest) -> HttpResponse:
     errors = []
     selected = {
         key: request.GET.get(key, "").strip()
-        for key in ("q", "until", "device", "status", "sort")
+        for key in ("q", "until", "device", "owner", "status", "sort")
     }
     if selected["q"]:
         queryset = queryset.filter(
@@ -57,7 +59,8 @@ def tasks(request: HttpRequest) -> HttpResponse:
             errors.append("Укажите корректную дату.")
         else:
             queryset = queryset.filter(scheduled_date__lte=until)
-    queryset = _filter_device(queryset, selected["device"], errors)
+    queryset = _filter_id(queryset, "device_id", selected["device"], errors)
+    queryset = _filter_id(queryset, "owner_id", selected["owner"], errors)
     if selected["status"]:
         if selected["status"] in Task.Status.values:
             queryset = queryset.filter(status=selected["status"])
@@ -76,11 +79,12 @@ def tasks(request: HttpRequest) -> HttpResponse:
         request,
         "maintenance_tasks/task_list.html",
         {
-            "tasks": page.object_list,
+            "tasks": page.object_list.for_list(),
             "page_obj": page,
             "filters": selected,
             "errors": errors,
             "device_options": Device.objects.all(),
+            "owner_options": User.objects.all(),
             "status_options": Task.Status.choices,
         },
     )
@@ -121,5 +125,9 @@ def task_statistics(request: HttpRequest) -> HttpResponse:
     return render(
         request,
         "maintenance_tasks/statistics.html",
-        {"by_device": by_device, "by_status": by_status},
+        {
+            "by_device": by_device,
+            "by_status": by_status,
+            "totals": task_totals(),
+        },
     )

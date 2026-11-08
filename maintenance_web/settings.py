@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 from maintenance_planning.config import Settings
@@ -48,6 +49,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "homepage.context_processors.site_context",
             ],
         },
     },
@@ -70,3 +72,12 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+INTERNAL_IPS = ["127.0.0.1", "::1"]
+DEBUG_TOOLBAR_ENABLED = (
+    DEBUG and "pytest" not in sys.modules and "test" not in sys.argv
+)
+if DEBUG_TOOLBAR_ENABLED:
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")

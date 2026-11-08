@@ -10,6 +10,7 @@
         <div class="col"><label for="q">Поиск</label><input id="q" class="form-control" name="q" value="{{ filters.q }}"></div>
         <div class="col"><label for="until">До даты</label><input id="until" class="form-control" type="date" name="until" value="{{ filters.until }}"></div>
         <div class="col"><label for="device">Устройство</label><select id="device" class="form-select" name="device"><option value="">Все</option>{% for item in device_options %}<option value="{{ item.pk }}" {% if filters.device == item.pk|stringformat:"s" %}selected{% endif %}>{{ item.name }}</option>{% endfor %}</select></div>
+        <div class="col"><label for="owner">Владелец</label><select id="owner" name="owner" class="form-select"><option value="">Все</option>{% for item in owner_options %}<option value="{{ item.pk }}" {% if filters.owner == item.pk|stringformat:"s" %}selected{% endif %}>{{ item.name }}</option>{% endfor %}</select></div>
         <div class="col"><label for="status">Статус</label><select id="status" class="form-select" name="status"><option value="">Все</option>{% for value, label in status_options %}<option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
         <div class="col"><label for="sort">Сортировка</label><select id="sort" class="form-select" name="sort">
             <option value="date" {% if filters.sort == "date" %}selected{% endif %}>Сначала ранние</option>

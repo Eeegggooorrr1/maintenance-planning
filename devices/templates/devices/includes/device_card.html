@@ -9,7 +9,7 @@
             {{ device.model }}
         </p>
         <a
-            href="{% url 'devices:detail' device.id %}"
+            href="{{ device.get_absolute_url }}"
             class="btn btn-primary mt-auto align-self-start"
         >
             Подробнее

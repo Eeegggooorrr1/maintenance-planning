@@ -45,3 +45,9 @@ orm-import:
 migrations-check:
 	poetry run python manage.py makemigrations --check --dry-run
 	poetry run python manage.py showmigrations
+
+.PHONY: createsuperuser admin-check
+createsuperuser:
+	poetry run python manage.py createsuperuser
+
+admin-check: django-check migrations-check test lint

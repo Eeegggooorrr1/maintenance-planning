@@ -4,6 +4,7 @@
 
 {% block content %}
     <h1>Статистика обслуживания</h1>
+    <p>Всего: {{ totals.total }}. Незавершённых: {{ totals.active }}. Завершённых: {{ totals.completed }}. Отменённых: {{ totals.cancelled }}.</p>
     <h2 class="h4">Задачи по устройствам</h2>
     {% for item in by_device %}
         <p>{{ item.name }}: {{ item.task_count }}</p>
